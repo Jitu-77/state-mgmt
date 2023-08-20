@@ -12,7 +12,9 @@ export class Interceptor implements HttpInterceptor {
         next:HttpHandler
     ) : Observable<HttpEvent<any>>{
         console.info("INSIDE INTERCEPTOR")
+            debugger        
         if (sessionStorage.getItem('aT_') != null) {
+            debugger
             const token = sessionStorage.getItem('aT_');
             const AuthRequest = request.clone({
               setHeaders: {

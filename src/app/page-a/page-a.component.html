@@ -1,1 +1,25 @@
-<p>page-a works!</p>
+
+<h1>
+    PAGE A
+</h1>
+
+    <div class="container">
+      <div class="item" *ngFor="let item of productList"
+      (click)="onItemClick(item)">{{item?.attributes?.title}}</div>
+    </div>
+
+
+
+
+
+
+<button>
+    Get Products
+</button>
+
+<button (click)="onClick()">
+    Add/Update
+</button>
+<router-outlet>
+
+</router-outlet>

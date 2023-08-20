@@ -1,0 +1,15 @@
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 300px;
+    border: 2px solid #333;
+    padding: 20px;
+  }
+
+  .item {
+    flex: 1;
+    padding: 10px;
+    background-color: lightblue;
+    border: 1px solid #666;
+  }

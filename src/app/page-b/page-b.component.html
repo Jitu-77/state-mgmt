@@ -1,1 +1,30 @@
-<p>page-b works!</p>
+<h1>
+    PAGE B
+</h1>
+
+<form [formGroup]="productForm" *ngIf="productForm" >
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title" formControlName ="title" required>
+    
+    <label for="slug">Slug:</label>
+    <input type="slug" id="slug" name="slug" formControlName ="slug" required>
+
+    <label for="category">Category:</label>
+    <input type="category" id="category" name="category"  formControlName ="category" required>
+
+    <label for="availableQty">Available Qty:</label>
+    <input type="tel" id="availableQty" name="availableQty" formControlName ="availableQty" required>
+
+    <label for="price">Price:</label>
+    <input type="tel" id="price" name="price" formControlName ="price" required>
+   
+    <button (click)="onSubmit()">
+        Submit
+    </button>
+    
+    <button (click)="onGoBack()">
+        Go Back
+    </button>
+
+
+</form>
