@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Action, Selector, State, StateContext } from "@ngxs/store";
-import { productsAdd, productsById, productsDelete, productsGet } from "../actions/products.action";
+import { productsAdd, productsById, productsDelete, productsGet, productsUpdate } from "../actions/products.action";
 import { ApiService } from "src/app/services/api.service";
 import { tap } from "rxjs";
 export class ProductStateModel{
@@ -106,6 +106,25 @@ export class ProductState{
                 setState({
                     ...state,
                     data:newState
+                })
+        }))
+    }
+
+
+    @Action(productsUpdate)
+    updateProduct({getState,patchState}:StateContext<any>,{payload,id}:productsUpdate){
+        console.log(payload,id)
+       return this.apiService.updateProducts(payload,id).pipe(tap((res:any)=>{
+            console.log(res)
+                let state = getState()
+                let index = state?.data.findIndex((el :any)=>{
+                    return res?.data.id ==  el?.id
+                } )
+                console.log(state)
+                console.log(index)
+                state.data[index] = {...res?.data}
+                patchState({
+                    data:[...state.data]
                 })
         }))
     }

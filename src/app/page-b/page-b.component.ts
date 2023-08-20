@@ -5,7 +5,7 @@ import { ApiService } from '../services/api.service';
 import { Select,Store } from '@ngxs/store';
 import { ProductState } from 'src/store/states/products.state';
 import { Observable } from 'rxjs';
-import { productsAdd, productsById, productsDelete } from 'src/store/actions/products.action';
+import { productsAdd, productsById, productsDelete, productsUpdate } from 'src/store/actions/products.action';
 @Component({
   selector: 'app-page-b',
   templateUrl: './page-b.component.html',
@@ -61,8 +61,10 @@ export class PageBComponent implements OnInit {
       }
     })
   }
-  onSubmit(){
+  onSubmit(e:any){
+    e.stopPropagation()
     console.log(this.productForm);
+
     if (this.type == 'add'){
       let obj = {
         data:{
@@ -79,9 +81,11 @@ export class PageBComponent implements OnInit {
           ...this.productForm?.value
         }
       }
-    this.apiService.updateProducts(obj,this.id).subscribe((data)=>{
-      console.log(data)
-    })
+    // this.apiService.updateProducts(obj,this.id).subscribe((data)=>{
+    //   console.log(data)
+    // })
+    this.store.dispatch(new productsUpdate(obj,this.id))
+    // this.store.dispatch(new productsUpdate(obj))
     }
   }
   onGoBack(){

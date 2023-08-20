@@ -15,7 +15,9 @@ export class productsDelete{
 
 export class productsUpdate{
     static readonly type  = '[Product] Update';
-    constructor(public id:any,public payload:any){} 
+    constructor(public payload:any,public id:any){} 
+    // constructor(public id:any){} 
+    // constructor(public payload:any){} 
 }
 export class productsById{
     static readonly type  = '[Product] getIndProduct';

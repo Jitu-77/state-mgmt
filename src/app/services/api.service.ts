@@ -168,6 +168,7 @@ export class ApiService {
       return this.http.post<any>(environment.strapiApiUrl+'api/products',data)
     }
     updateProducts(data:any,id:any){
+      debugger
       const httpOptions = {
         headers: new HttpHeaders({
           'content-type':'Application/json',
