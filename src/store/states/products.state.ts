@@ -4,13 +4,15 @@ import { productsGet } from "../actions/products.action";
 import { ApiService } from "src/app/services/api.service";
 import { tap } from "rxjs";
 export class ProductStateModel{
-    data : any
+    data? : any;
+    loaded?:boolean
 }
 
 @State<ProductStateModel>({
     name: 'products',
     defaults:{
-        data : []
+        data : [],
+        loaded : false
     }
   })
 
@@ -18,16 +20,22 @@ export class ProductStateModel{
 
 export class ProductState{
     
-    constructor(private apiService: ApiService){
+    constructor(private apiService: ApiService){}
 
-    }
     @Selector()  // to enable state selection
-  static  getProductList(state:any){ // static is a keyword needed to define
+    static  getProductList(state:any){ // static is a keyword needed to define
         return state.data
     }
+
+    @Selector()  // to enable state selection
+    static  getProductLoadedValue(state:any){ // static is a keyword needed to define
+        return state.loaded
+    }
+
+
     @Action(productsGet) // import a particular action
     getProduct({getState,setState}:StateContext<any>){  //getState , setState are methods of state context
-        //state context are used to manipulate teh state value
+    //state context are used to manipulate teh state value
     //Now we will call the api , we wont subscribe the data here as will only modify the data here and pass 
     // we always return methods in service files
     return this.apiService.getProducts().pipe(tap((res:any)=>{
@@ -36,7 +44,8 @@ export class ProductState{
         console.log(state)
         setState({
             ...state,
-            data: res.data
+            data: res.data,
+            loaded : true
         })
 
     }))
