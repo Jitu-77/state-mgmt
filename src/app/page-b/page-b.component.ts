@@ -1,14 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ApiService } from '../services/api.service';
 @Component({
   selector: 'app-page-b',
   templateUrl: './page-b.component.html',
   styleUrls: ['./page-b.component.scss']
 })
 export class PageBComponent implements OnInit {
-  productForm?:FormGroup 
-  constructor(public formBuilder: FormBuilder,public activatedRouter : ActivatedRoute,private router :Router) { }
+  productForm?:FormGroup ;
+  type?:any;
+  id?:any;
+  constructor(public formBuilder: FormBuilder,
+    public activatedRouter : ActivatedRoute,
+    private router :Router,
+    private apiService: ApiService) { }
 
   ngOnInit(): void {
     this.productForm = this.formBuilder.group({
@@ -21,6 +27,8 @@ export class PageBComponent implements OnInit {
     this.activatedRouter.queryParams.subscribe((data:any)=>{
       if(data){
         if(data?.id){
+            this.id = data?.id
+            this.type='update'
             let dataSrc :any = JSON.parse(localStorage.getItem('det') || '{}')
             this.productForm?.patchValue({
               title : dataSrc?.attributes.title,
@@ -37,15 +45,36 @@ export class PageBComponent implements OnInit {
             //   price : JSON.parse(dataSrc)?.attributes.price
             // })
         }else{
+          this.type='add'
           console.log("NO DATA")
         }
       }else{
+        this.type='add'
         console.log("NO DATA")
       }
     })
   }
   onSubmit(){
     console.log(this.productForm);
+    if (this.type == 'add'){
+      let obj = {
+        data:{
+          ...this.productForm?.value
+        }
+      }
+      this.apiService.addProducts(obj).subscribe((data)=>{
+        console.log(data)
+      })
+    }else{
+      let obj = {
+        data:{
+          ...this.productForm?.value
+        }
+      }
+    this.apiService.updateProducts(obj,this.id).subscribe((data)=>{
+      console.log(data)
+    })
+    }
   }
   onGoBack(){
     this.router.navigate(['/users'])

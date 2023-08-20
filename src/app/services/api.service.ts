@@ -155,4 +155,40 @@ export class ApiService {
       // }
       return this.http.get(environment.strapiApiUrl+'api/products?populate=*')
     }
+    addProducts(data:any){
+      const httpOptions = {
+        headers: new HttpHeaders({
+          'content-type':'Application/json',
+          // Authorization:`Bearer ${token}`
+        })
+      }
+      //WITHOUT INTERCEPTOR
+      // return this.http.post<any>(environment.apiUrl+'api/v4'+'/variants/getAllVariantsById',requestBody,httpOptions)
+      // WITH INTERCEPTOR
+      return this.http.post<any>(environment.strapiApiUrl+'api/products',data)
+    }
+    updateProducts(data:any,id:any){
+      const httpOptions = {
+        headers: new HttpHeaders({
+          'content-type':'Application/json',
+          // Authorization:`Bearer ${token}`
+        })
+      }
+      //WITHOUT INTERCEPTOR
+      // return this.http.post<any>(environment.apiUrl+'api/v4'+'/variants/getAllVariantsById',requestBody,httpOptions)
+      // WITH INTERCEPTOR
+      return this.http.put<any>(environment.strapiApiUrl+'api/products'+'/'+id,data)
+    }
+    deleteProducts(id:any){
+      const httpOptions = {
+        headers: new HttpHeaders({
+          'content-type':'Application/json',
+          // Authorization:`Bearer ${token}`
+        })
+      }
+      //WITHOUT INTERCEPTOR
+      // return this.http.post<any>(environment.apiUrl+'api/v4'+'/variants/getAllVariantsById',requestBody,httpOptions)
+      // WITH INTERCEPTOR
+      return this.http.delete<any>('api/products'+'/'+id)
+    }
 }

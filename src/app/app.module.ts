@@ -11,6 +11,7 @@ import { NgxsModule } from '@ngxs/store';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ProductState } from 'src/store/states/products.state';
 @NgModule({
   declarations: [
     AppComponent,
@@ -22,7 +23,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule, 
-    NgxsModule.forRoot([]),
+    NgxsModule.forRoot([ProductState]),
     NgxsLoggerPluginModule.forRoot(),
     NgxsReduxDevtoolsPluginModule.forRoot(),
     AppRoutingModule

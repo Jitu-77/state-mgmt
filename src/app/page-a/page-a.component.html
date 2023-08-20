@@ -2,12 +2,21 @@
 <h1>
     PAGE A
 </h1>
-
-    <div class="container">
+<!-- USed for subscribing observables -->
+    <!-- <div class="container">
       <div class="item" *ngFor="let item of productList"
       (click)="onItemClick(item)">{{item?.attributes?.title}}</div>
-    </div>
+    </div> -->
+<!--  -->
 
+
+
+<!-- Directly rendering by observables -->
+    <div class="container">
+      <div class="item" *ngFor="let item of $products | async"
+      (click)="onItemClick(item)">{{item?.attributes?.title}}</div>
+    </div>
+<!--  -->
 
 
 
