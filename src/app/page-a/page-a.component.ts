@@ -50,7 +50,8 @@ export class PageAComponent implements OnInit {
   }
   onItemClick(e:any){
     console.warn(e)
-    localStorage.setItem('det',JSON.stringify(e))
+    // setting data in ls and retrieving data
+    // localStorage.setItem('det',JSON.stringify(e)) 
     // localStorage.setItem('det',e)
     this.onClick(e)
   }

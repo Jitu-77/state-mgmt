@@ -18,6 +18,9 @@
     <label for="price">Price:</label>
     <input type="tel" id="price" name="price" formControlName ="price" required>
    
+    <button (click)="onDelete(id)">
+        Delete
+    </button>
     <button (click)="onSubmit()">
         Submit
     </button>

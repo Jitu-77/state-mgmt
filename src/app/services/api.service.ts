@@ -189,6 +189,16 @@ export class ApiService {
       //WITHOUT INTERCEPTOR
       // return this.http.post<any>(environment.apiUrl+'api/v4'+'/variants/getAllVariantsById',requestBody,httpOptions)
       // WITH INTERCEPTOR
-      return this.http.delete<any>('api/products'+'/'+id)
+      let data :any = 
+        {
+          "data": {
+            "id": id,
+            "attributes": {},
+            "meta": {}
+          },
+          "meta": {}
+        }
+      
+      return this.http.delete<any>(environment.strapiApiUrl+'api/products'+'/'+id,data)
     }
 }

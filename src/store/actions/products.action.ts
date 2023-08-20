@@ -17,3 +17,7 @@ export class productsUpdate{
     static readonly type  = '[Product] Update';
     constructor(public id:any,public payload:any){} 
 }
+export class productsById{
+    static readonly type  = '[Product] getIndProduct';
+    constructor(public id:any){} 
+}
