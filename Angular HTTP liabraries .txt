@@ -1,0 +1,156 @@
+Http Request:
+https://angular.io/api/common/http/HttpRequest
+
+
+
+****************************************************************************POST/GET/PUT/DELETE**************************************************************************
+import { HttpClient, HttpHeaders, HttpBackend, HttpParams,HttpErrorResponse } from '@angular/common/http';  -- in component
+import { HttpClientModule } from '@angular/common/http';-- in module
+Type 'requestBody' is missing the following properties from type 'HttpErrorResponse': name, message, error, ok, and 5 more.
+https://angular.io/guide/http#making-a-post-request
+
+NOTE : FOR GET  THERE ARE NO REQ BODY BUT THERER ARE PARAMS THAT ARE TO BE SET OR APPENDED
+
+***********************************************************************POST/GET/PUT/DELETE*******************************************************************************
+
+***********************************************************************INTERCEPTOR*******************************************************************************
+import { Injectable } from '@angular/core';
+import {
+  HttpEvent,
+  HttpInterceptor,
+  HttpHandler,
+  HttpRequest,
+  HttpErrorResponse,
+  HttpClient,
+} from '@angular/common/http';  -- in interceptor.ts
+
+import { HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http' --- in app module.ts
+
+  providers: [
+    ApiService,
+    { provide: HTTP_INTERCEPTORS, useClass: Interceptor, multi: true },
+  ],
+
+    intercept(
+        request:HttpRequest<any>,
+        next:HttpHandler
+    ) : Observable<HttpEvent<any>>{
+        console.info("INSIDE INTERCEPTOR")
+        if (sessionStorage.getItem('aT_') != null) {
+            const token = sessionStorage.getItem('aT_');
+            const AuthRequest = request.clone({
+              setHeaders: {
+                Authorization: 'Bearer ' + token,
+              },
+            });
+            return next.handle(AuthRequest)
+        }
+        else{
+            const token = sessionStorage.getItem('aT_');
+            const AuthRequest = request.clone({
+              setHeaders: {},
+            });
+            return next.handle(AuthRequest)
+        }
+    }
+ NOTE : INTECEPTOR.TS MUST CONTAIN A INTERCEPTOR FUCNTION TO HANDLE REQUEST
+
+next.handle() 
+ so that the request flows through to the next interceptor and, eventually, the backend handler.
+ An interceptor could skip calling next.handle(), short-circuit the chain, and return its own 
+ Observable with an artificial server response.
+
+next.handle()
+https://angular.io/guide/http#intercepting-requests-and-responses
+
+import {
+  HttpEvent, HttpInterceptor, HttpHandler, HttpRequest
+} from '@angular/common/http';
+
+INJECTIBLE SERVICE
+
+catchError must return an observable 
+
+
+    intercept(
+        request:HttpRequest<any>,
+        next:HttpHandler
+    ) : Observable<HttpEvent<any>>{
+        console.info("INSIDE INTERCEPTOR")
+        if (sessionStorage.getItem('aT_') != null) {
+            const token = sessionStorage.getItem('aT_');
+            const AuthRequest = request.clone({
+              setHeaders: {
+                Authorization: 'Bearer ' + token,
+              },
+            });
+            return next.handle(AuthRequest).pipe(
+                catchError((error) => {
+                    console.log(error);
+                    return this.handleError(AuthRequest, next)
+                })
+            ) ;
+        }
+        else{
+            const token = sessionStorage.getItem('aT_');
+            const AuthRequest = request.clone({
+              setHeaders: {},
+            });
+            return next.handle(AuthRequest).pipe(
+                catchError((error) => {
+                    console.log(error);
+                    return this.handleError(AuthRequest, next)
+                })
+            )
+        }
+    }
+    handleError(request: HttpRequest<any>, next: HttpHandler) : Observable<any>{
+        return throwError(()=>'session expired');
+    }
+
+
+***********************************************************************INTERCEPTOR*******************************************************************************
+
+**************************************************************************NORMAL REQ WITHOUT INTERCEPTOR*********************************************************
+    get(){
+      const token = sessionStorage.getItem('aT_');
+      let params = new HttpParams().append('customer_id' , 'aaxx').append('isComet',false)
+      const httpOptions = {
+        headers: new HttpHeaders({
+          'Content-Type':  'application/json',
+          Authorization: `Bearer ${token}`,
+          
+      }),
+      params:params
+    }
+
+      return this.http.get(environment.apiUrl+'api/v4'+'/car-exchange/getCarwaleExchangeCities',httpOptions)
+    }
+		--------------------------------------------------------------------------------------------------------------
+NOTE : 
+WE CAN SEND httpsOptions or just params eg : 
+.get<any>(environment.apiUrl + APIENUM.VERSION + endPoint, {params:params})
+but we cannot send headers like this 
+{headers:headers}-- we can send only httpOptions 
+POST WAY :>
+
+Another way for headers :>
+this.headers = new HttpHeaders();
+this.headers = this.headers.set('Content-Type', `application/json`);
+this.headers = this.headers.set('Authorization', `Bearer ${this.token}`);
+  bStateListing = (body: any) =>
+    this.http.post(`${this.apiUrl}/booking/booking_state_listing`, body, {
+      headers: this.headers,
+    });
+
+
+		---------------------------------------------------------------------------------------------------------------
+      const token =sessionStorage.getItem('aT_')
+      const httpOptions = {
+        headers: new HttpHeaders({
+          'content-type':'Application/json',
+          Authorization:`Bearer ${token}`
+        })
+      }
+      return this.http.post<any>(environment.apiUrl+'api/v4'+'/variants/getAllVariantsById',requestBody,httpOptions)
+**************************************************************************NORMAL REQ WITHOUT INTERCEPTOR **********************************************************

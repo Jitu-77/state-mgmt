@@ -1,0 +1,110 @@
+https://ngrx.io/
+https://www.ngxs.io/
+https://www.ngxs.io/v/v3.2/getting-started/installation
+https://www.ngxs.io/v/v3.2/plugins
+https://www.ngxs.io/v/v3.2/plugins/logger
+https://www.ngxs.io/v/v3.2/plugins/devtools
+
+1> ******************************
+install 
+npm i @ngxs/store --S
+npm i @ngxs/logger-plugin --S
+npm i @ngxs/devtools-plugin --S
+extension react dev tools
+2> *********************************
+enable extension redux dev tools 
+
+3> ********************************
+in app.module.ts
+import { NgxsModule } from '@ngxs/store';
+    NgxsModule.forRoot([<State Name>])
+import { NgxsLoggerPluginModule } from  '@ngxs/logger-plugin';
+    NgxsLoggerPluginModule.forRoot()
+import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
+    NgxsReduxDevtoolsPluginModule.forRoot()
+
+
+4>******************************
+Action file 
+export class productsAdd{               // products add action name
+    static readonly type  = '[Product] Add'; // '[Product] Add' -- unique identifier of action in dev tools  ,{static readonly type} -- syntax
+    constructor(public payload:any){} // argument that is passed as payload
+}
+5>****************************
+Creating state
+
+1>creating a state model and state declaration 
+###########################################################
+export class ProductStateModel{ // creating state model
+    data? : any;
+    loaded?:boolean;
+    selectedProduct?:any
+}
+
+@State<ProductStateModel>({ // state declaration by state decorator
+    name: 'products',  // name fo the state or the selector of state
+    defaults:{ // default value for the state 
+        data : [],
+        loaded : false,
+        selectedProduct : null
+    }
+  })
+
+  @Injectable()
+##################################################################
+2>Creating Selector and Action decorator
+
+@Select -- IN component class to select the data
+@Selector -- IN state class to implement logic on state data
+
+@Action -- IN component class to dispatch data
+@Action -- IN state class to update data
+
+#######################SELECTOR IN STATE#############################
+    @Selector()  // to enable state selection
+    static  getProductList(state:any){ // static is a keyword needed to define
+        return state.data
+    }
+#########################SELECT IN COMPONENT##################################
+  //Now we will be creating a select method Observable 
+  // we can also use this observable oly in html file for rendering
+  @Select(ProductState.getProductList) $products? :Observable<any> // mapping the associated selector in state ts
+
+  @Select(ProductState.getProductLoadedValue) $productLoaded? :Observable<any> // mapping the associated selector in state ts
+########################################################
+#######################ACTION IN STATE #################################
+    @Action(productsGet) // import a particular action
+    getProduct({getState,setState}:StateContext<any>){  
+    //getState , setState are methods of state context type
+    //state context -- getState,setState,patchState,dispatch
+    //state context are used to manipulate the state value
+    //Now we will call the api , we wont subscribe the data here as will only modify the data here and pass 
+    // we always return methods in service files
+    return this.apiService.getProducts().pipe(tap((res:any)=>{
+        console.log(res,"RES DATA")
+        const state = getState() // getting the initial value of state
+        console.log(state)
+        setState({
+            ...state,
+            data: res.data,
+            loaded : true
+        })
+
+    }))
+        console.log("State Action")
+    }
+#########################ACTION IN COMPONENT###############################
+    this.$productLoaded?.subscribe((res)=>{
+      if(!res){
+        this.store.dispatch(new productsGet())
+      }
+    })
+
+##########################################################################
+
+COMPONENT CALLS ACTIONS , ACTIONS CALLS STATE , STATE GIVES DATA TO COMPONENT
+
+
+
+
+
